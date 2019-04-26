@@ -1,0 +1,4 @@
+configMapGenerator:
+- name: k8s-monitor-config
+  files:
+  - k8s-monitor-config.json
