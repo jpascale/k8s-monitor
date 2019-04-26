@@ -4,7 +4,7 @@
   "description": "A self hosted alerting service",
   "main": "index.js",
   "scripts": {
-    "start": "node build/index.js",
+    "start": "node build/index.js ./k8s-monitor-config.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
