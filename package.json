@@ -1,0 +1,33 @@
+{
+  "name": "k8s-monitor",
+  "version": "1.0.0",
+  "description": "A self hosted alerting service",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jpascale/k8s-monitor.git"
+  },
+  "keywords": [
+    "k8s",
+    "monitor",
+    "alerts"
+  ],
+  "author": "Juan Martin Pascale",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jpascale/k8s-monitor/issues"
+  },
+  "homepage": "https://github.com/jpascale/k8s-monitor#readme",
+  "dependencies": {
+    "async": "^2.6.2",
+    "express": "^4.16.4"
+  },
+  "devDependencies": {
+    "@types/async": "^2.4.1",
+    "@types/node": "^11.13.7",
+    "typescript": "^3.4.5"
+  }
+}
