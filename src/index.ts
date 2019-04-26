@@ -1,6 +1,7 @@
 import * as async from 'async';
+import logging from './logging';
 
-console.log('I\'m a newborn project');
+logging.info('I\'m a newborn project');
 
 // Load readiness and liveness, start responding liveness, not readiness
 // Load config

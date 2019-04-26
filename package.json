@@ -24,11 +24,13 @@
   "homepage": "https://github.com/jpascale/k8s-monitor#readme",
   "dependencies": {
     "async": "^2.6.2",
-    "express": "^4.16.4"
+    "express": "^4.16.4",
+    "winston": "^3.2.1"
   },
   "devDependencies": {
     "@types/async": "^2.4.1",
     "@types/node": "^11.13.7",
+    "@types/winston": "^2.4.4",
     "typescript": "^3.4.5"
   }
 }
