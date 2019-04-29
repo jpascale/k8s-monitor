@@ -1,6 +1,5 @@
 import { Alert } from './alert';
 
 export interface Task {
-  type: string;
-  alerts: Alert[]
+  execute: (params: { [k: string]: any }, cb: (result: boolean) => any) => any;
 }
