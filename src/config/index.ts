@@ -1,6 +1,7 @@
 import logging from '../logging';
+import { Config } from '../types/config';
 
-export const loadConfig = (path: string) => {
+export const loadConfig: (path: string) => Config = (path: string) => {
   try {
     return require(path);
   } catch (e) {
