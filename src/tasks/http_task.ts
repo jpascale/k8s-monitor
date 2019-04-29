@@ -21,7 +21,7 @@ export class HttpTask implements Task {
     };
 
     request(options, (error: any, response: any) => {
-      if (!error && response.statusCode === 200) {
+      if (!error && response.statusCode < 300) {
         cb(true);
       } else {
         cb(false);
