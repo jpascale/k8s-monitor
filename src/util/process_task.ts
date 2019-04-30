@@ -18,24 +18,35 @@ export const processTask = (taskCounter: TaskCounter, callback: () => any) => {
       // Task did respond
       if (result) {
         taskCounter.failureCount = 0;
-
+        logging.debug(`Task ${taskCounter.name} responded`);
         // Check if it's up again;
         if (!taskCounter.up) {
           taskCounter.up = true;
           taskCounter.alerts.forEach((alertCounter: AlertCounter) => {
             const alert: Alert = ALERT_MAP[alertCounter.type];
 
-            const alertResendInterval = setInterval(() => {
-              alert.restablish(alertCounter.params, (res: boolean) => {
-                if (res) {
-                  clearInterval(alertResendInterval);
-                }
-              });
-            }, RETRY_MS);
+            // Resend alert until it's received
+            alert.restablish(alertCounter.params, (res: boolean) => {
+              if (!res) {
+                const alertResendInterval = setInterval(() => {
+                  alert.restablish(alertCounter.params, (res: boolean) => {
+                    if (res) {
+                      clearInterval(alertResendInterval);
+                    }
+                  });
+                }, RETRY_MS);
+              } else {
+                logging.warn(`Restablish alert for ${taskCounter.name} subtask ${taskCounter.subname} correctly triggered`);
+              }
+            });
+
+
+
           });
         }
         // Task did not respond
       } else {
+        logging.debug(`Task ${taskCounter.name} did not respond`);
         taskCounter.failureCount += 1;
         if (taskCounter.failureCount > TOLERANCE && taskCounter.up) {
           taskCounter.up = false;
@@ -44,14 +55,20 @@ export const processTask = (taskCounter: TaskCounter, callback: () => any) => {
             logging.warn(`Triggering alert for task ${taskCounter.name} subtask ${taskCounter.subname}`);
 
             // Resend alert until it's received
-            const alertResendInterval = setInterval(() => {
-              alert.execute(alertCounter.params, (res: boolean) => {
-                if (res) {
-                  logging.warn(`Alert for ${taskCounter.name} subtask ${taskCounter.subname} correctly triggered`);
-                  clearInterval(alertResendInterval);
-                }
-              });
-            }, RETRY_MS);
+            alert.execute(alertCounter.params, (res: boolean) => {
+              if (!res) {
+                const alertResendInterval = setInterval(() => {
+                  alert.execute(alertCounter.params, (res: boolean) => {
+                    if (res) {
+                      logging.warn(`Alert for ${taskCounter.name} subtask ${taskCounter.subname} correctly triggered`);
+                      clearInterval(alertResendInterval);
+                    }
+                  });
+                }, RETRY_MS);
+              } else {
+                logging.warn(`Alert for ${taskCounter.name} subtask ${taskCounter.subname} correctly triggered`);
+              }
+            });
 
           });
         }
