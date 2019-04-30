@@ -32,7 +32,7 @@ export class SlackAlert implements Alert {
   };
 
   public restablish(params: Params, cb: (result: boolean) => any) {
-    const options = getOptions(params.hook, `Downtime alert: Server ${params.title} is UP.`);
+    const options = getOptions(params.hook, `Downtime alert: Server ${params.title} is UP again.`);
     request(options, (error: any, response: any) => {
       if (!error && response.statusCode < 300) {
         cb(true);
