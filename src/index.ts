@@ -25,9 +25,20 @@ logging.info('Starting stats server');
 stats.setReadiness(false);
 logging.info('Stats server started, server not ready');
 
-
+const loop = (next: async.ErrorCallback<Error>) => {
+  next();
+};
 
 // Load task lists
 // Load alerts lists
 // Start responding readiness
+
 // Start tasks loop
+async.forever(loop, (err?: Error) => {
+  logging.info('Forever callback called');
+  if (err) {
+    logging.warn('Error ocurred while looping over the task list');
+    logging.warn(err.message);
+    process.exit(1);
+  }
+});
