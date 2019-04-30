@@ -27,17 +27,22 @@ logging.info('Stats server started, server not ready');
 // Load task info and alert info list
 const taskList = generateTaskCounters(loadedConfig);
 
-// Check accepted params;
+// TODO: Check accepted params;
 
 // Set up timestamps
 taskList.forEach(updateTaskCounterNext);
 
 const loop = (next: async.ErrorCallback<Error>) => {
   // Iterate over tasks
-  async.each(taskList, processTask);
+  async.each(taskList, processTask, (err) => {
+    if (err) {
+      logging.error(`Error ocurred while iterating over tasks list`);
+      logging.error(err.message);
+    }
+    // TODO: Iterate over current alerts
+    next();
+  });
 
-  // Iterate over current alerts
-  next();
 };
 // Start tasks loop
 async.forever(loop, (err?: Error) => {
