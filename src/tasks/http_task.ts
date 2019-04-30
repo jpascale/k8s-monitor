@@ -1,4 +1,4 @@
-import { Task } from '../types/task';
+import { Task } from '../types';
 import logging from '../logging';
 const request = require('request');
 logging.info('Loading http task');

@@ -1,4 +1,4 @@
-import { Alert } from '../types/alert';
+import { Alert } from '../types';
 const request = require('request');
 
 export interface Params {

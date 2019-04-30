@@ -1,6 +1,4 @@
-import { Config, Item, ConfigTask, ConfigAlert } from '../types/config';
-import { TaskCounter } from '../types/task_counter'
-import { AlertCounter } from '../types/alert_counter';
+import { Config, Item, TaskConfig, AlertConfig, TaskCounter, AlertCounter } from '../types';
 import { TASK_MAP } from '../tasks';
 import { ALERT_MAP } from '../alerts';
 import logging from '../logging';
@@ -17,7 +15,7 @@ export const generateTaskCounters: TaskCounterGenerator = (config: Config) => {
 
     // Generate alerts for these tasks
     const alertList: AlertCounter[] = [];
-    item.alerts.forEach((alert: ConfigAlert) => {
+    item.alerts.forEach((alert: AlertConfig) => {
       logging.info(`Setting up ${alert.type} alert`);
       if (!ALERT_MAP[alert.type]) {
         logging.warn(`Alert ${alert.type} does not exist, ignoring...`);
@@ -32,7 +30,7 @@ export const generateTaskCounters: TaskCounterGenerator = (config: Config) => {
 
     const alertNamesStr: string = '[' + alertList.map((e: AlertCounter) => e.type).join(', ') + ']';
 
-    item.tasks.forEach((task: ConfigTask) => {
+    item.tasks.forEach((task: TaskConfig) => {
       logging.info(`Setting up ${task.name} task of type ${task.type} with alerts ${alertNamesStr}`);
       const taskCounter: TaskCounter = {
         name: item.name,

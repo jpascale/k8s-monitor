@@ -1,5 +1,5 @@
 import logging from '../logging';
-import { Config } from '../types/config';
+import { Config } from '../types';
 
 export const loadConfig: (path: string) => Config = (path: string) => {
   try {

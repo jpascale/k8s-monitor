@@ -1,19 +1,19 @@
-export interface ConfigTask {
+export interface TaskConfig {
   name: string;
   type: string,
   params: { [k: string]: any },
   interval: string
 }
 
-export interface ConfigAlert {
+export interface AlertConfig {
   type: string,
   params: { [k: string]: any }
 }
 
 export interface Item {
   name: string;
-  tasks: ConfigTask[],
-  alerts: ConfigAlert[]
+  tasks: TaskConfig[],
+  alerts: AlertConfig[]
 }
 
 export interface Config {

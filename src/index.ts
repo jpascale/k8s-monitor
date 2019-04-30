@@ -2,7 +2,7 @@ import * as async from 'async';
 import logging from './logging';
 import * as config from './config';
 import * as stats from './stats';
-import { Config } from './types/config';
+import { Config } from './types';
 import { generateTaskCounters } from './util';
 
 const path = require('path');
@@ -28,10 +28,8 @@ logging.info('Stats server started, server not ready');
 // Load task info and alert info list
 const taskList = generateTaskCounters(loadedConfig);
 
-// Start responding readiness
-logging.info(JSON.stringify(taskList));
-
 // Set up timestamps;
+
 
 const loop = (next: async.ErrorCallback<Error>) => {
   // Iterate over tasks
