@@ -11,7 +11,7 @@ export interface Params {
 }
 
 export class HttpTask implements Task {
-  execute = (params: Params, cb: (result: boolean) => any) => {
+  public execute(params: Params, cb: (result: boolean) => any) {
 
     const options = {
       url: `http://${params.hostname}:${params.port}${params.path}`,
