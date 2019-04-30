@@ -3,11 +3,8 @@ import logging from './logging';
 import * as config from './config';
 import * as stats from './stats';
 import { Config, TaskCounter } from './types';
-import { generateTaskCounters, updateTaskCounterNext } from './util';
+import { generateTaskCounters, updateTaskCounterNext, processTask } from './util';
 const path = require('path');
-
-// TODO: Configure this for every task;
-const TOLERANCE = 3;
 
 logging.info('Starting k8s monitor');
 
@@ -30,12 +27,14 @@ logging.info('Stats server started, server not ready');
 // Load task info and alert info list
 const taskList = generateTaskCounters(loadedConfig);
 
+// Check accepted params;
+
 // Set up timestamps
 taskList.forEach(updateTaskCounterNext);
 
 const loop = (next: async.ErrorCallback<Error>) => {
   // Iterate over tasks
-
+  async.each(taskList, processTask);
 
   // Iterate over current alerts
   next();
