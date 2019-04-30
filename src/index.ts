@@ -3,7 +3,7 @@ import logging from './logging';
 import * as config from './config';
 import * as stats from './stats';
 import { Config } from './types/config';
-import { TASK_MAP } from './tasks';
+import { generateTaskCounters } from './util';
 
 const path = require('path');
 
@@ -25,14 +25,20 @@ logging.info('Starting stats server');
 stats.setReadiness(false);
 logging.info('Stats server started, server not ready');
 
+// Load task info and alert info list
+const taskList = generateTaskCounters(loadedConfig);
+
+// Start responding readiness
+logging.info(JSON.stringify(taskList));
+
+// Set up timestamps;
+
 const loop = (next: async.ErrorCallback<Error>) => {
+  // Iterate over tasks
+
+  // Iterate over current alerts
   next();
 };
-
-// Load task lists
-// Load alerts lists
-// Start responding readiness
-
 // Start tasks loop
 async.forever(loop, (err?: Error) => {
   logging.info('Forever callback called');

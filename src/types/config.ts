@@ -1,4 +1,5 @@
 export interface ConfigTask {
+  name: string;
   type: string,
   params: { [k: string]: any },
   interval: string
@@ -6,7 +7,7 @@ export interface ConfigTask {
 
 export interface ConfigAlert {
   type: string,
-  params: {[k:string]: any}
+  params: { [k: string]: any }
 }
 
 export interface Item {
