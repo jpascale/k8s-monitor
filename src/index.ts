@@ -32,6 +32,10 @@ const taskList = generateTaskCounters(loadedConfig);
 // Set up timestamps
 taskList.forEach(updateTaskCounterNext);
 
+// Respond to readiness
+stats.setReadiness(true);
+logging.info('Server is ready');
+
 const loop = (next: async.ErrorCallback<Error>) => {
   // Iterate over tasks
   async.each(taskList, processTask, (err) => {
