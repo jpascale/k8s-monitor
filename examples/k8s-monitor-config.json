@@ -1,0 +1,27 @@
+{
+  "config": [
+    {
+      "name": "Test monitor",
+      "tasks": [
+        {
+          "name": "Test server",
+          "type": "http",
+          "params": {
+            "hostname": "192.168.0.87",
+            "port": 8080,
+            "path": "/"
+          },
+          "interval": "5s"
+        }
+      ],
+      "alerts": [
+        {
+          "type": "slack",
+          "params": {
+            "hook": "https://hooks.slack.com/services/XXXX/XXXX/XXXX"
+          }
+        }
+      ]
+    }
+  ]
+}
