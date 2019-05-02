@@ -36,6 +36,16 @@ taskList.forEach(updateTaskCounterNext);
 stats.setReadiness(true);
 logging.info('Server is ready');
 
+let events: { stop: boolean, eventNum: number } = { stop: false, eventNum: 0 };
+
+// Handle SIGTERM
+process.on('SIGTERM', () => {
+  stats.setReadiness(false);
+  logging.info('SIGTERM received');
+  events.eventNum = 1;
+  events.stop = true;
+});
+
 const loop = (next: async.ErrorCallback<Error>) => {
   // Iterate over tasks
   async.each(taskList, processTask, (err) => {
@@ -44,16 +54,25 @@ const loop = (next: async.ErrorCallback<Error>) => {
       logging.error(err.message);
     }
     // TODO: Iterate over current alerts
-    next();
+
+    //TODO: Refactor this
+    if (events.stop) {
+      switch (events.eventNum) {
+        case 1:
+          return next(new Error('SIGTERM received, grafully shutting down'))
+      }
+    } else {
+      next();
+    }
   });
 
 };
 // Start tasks loop
 async.forever(loop, (err?: Error) => {
-  logging.info('Forever callback called');
+  logging.info('Loop ended');
   if (err) {
-    logging.warn('Error ocurred while looping over the task list');
     logging.warn(err.message);
-    process.exit(1);
+    logging.info('Bye');
+    process.exit(0);
   }
 });
