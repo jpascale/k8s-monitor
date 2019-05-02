@@ -10,6 +10,7 @@ const _ = require('lodash');
 // TODO: Configure this for every task;
 const TOLERANCE = 3;
 const RETRY_MS = 10000;
+const REPEAT_ALERT_AFTER_TIMES = 100;
 
 export const processTask = (taskCounter: TaskCounter, callback: () => any) => {
   const now = moment();
@@ -46,9 +47,9 @@ export const processTask = (taskCounter: TaskCounter, callback: () => any) => {
         }
         // Task did not respond
       } else {
-        logging.warn(`Task ${taskCounter.name} did not respond`);
         taskCounter.failureCount += 1;
-        if (taskCounter.failureCount > TOLERANCE && taskCounter.up) {
+        logging.warn(`Task ${taskCounter.name} did not respond, failure count: ${taskCounter.failureCount}`);
+        if ((taskCounter.failureCount > TOLERANCE && taskCounter.up) || taskCounter.failureCount % REPEAT_ALERT_AFTER_TIMES === 0) {
           taskCounter.up = false;
           taskCounter.alerts.forEach((alertCounter: AlertCounter) => {
             const alert: Alert = ALERT_MAP[alertCounter.type];
