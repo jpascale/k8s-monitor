@@ -14,6 +14,7 @@ export class HttpTask implements Task {
   public execute(params: Params, cb: (result: boolean) => any) {
 
     const options = {
+      method: 'HEAD',
       url: `http://${params.hostname}:${params.port}${params.path}`,
       headers: {
         'User-Agent': 'request'
