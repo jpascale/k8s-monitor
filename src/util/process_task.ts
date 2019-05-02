@@ -5,6 +5,7 @@ import { ALERT_MAP } from '../alerts';
 import { Task } from '../types';
 import moment = require('moment');
 import logging from '../logging';
+const _ = require('lodash');
 
 // TODO: Configure this for every task;
 const TOLERANCE = 3;
@@ -13,12 +14,13 @@ const RETRY_MS = 10000;
 export const processTask = (taskCounter: TaskCounter, callback: () => any) => {
   const now = moment();
   if (now.isSame(taskCounter.next) || now.isAfter(taskCounter.next)) {
+    logging.info(`Executing task ${taskCounter.name} (${taskCounter.subname})`);
     const task: Task = TASK_MAP[taskCounter.type];
     task.execute(taskCounter.params, (result: boolean) => {
       // Task did respond
       if (result) {
         taskCounter.failureCount = 0;
-        logging.debug(`Task ${taskCounter.name} responded`);
+        logging.debug(`Task ${taskCounter.name} (${taskCounter.subname}) responded`);
         // Check if it's up again;
         if (!taskCounter.up) {
           taskCounter.up = true;
@@ -26,10 +28,10 @@ export const processTask = (taskCounter: TaskCounter, callback: () => any) => {
             const alert: Alert = ALERT_MAP[alertCounter.type];
 
             // Resend alert until it's received
-            alert.restablish(alertCounter.params, (res: boolean) => {
+            alert.restablish(_.merge(taskCounter, alertCounter.params), (res: boolean) => {
               if (!res) {
                 const alertResendInterval = setInterval(() => {
-                  alert.restablish(alertCounter.params, (res: boolean) => {
+                  alert.restablish(_.merge(taskCounter.params, alertCounter.params), (res: boolean) => {
                     if (res) {
                       clearInterval(alertResendInterval);
                     }
@@ -40,13 +42,11 @@ export const processTask = (taskCounter: TaskCounter, callback: () => any) => {
               }
             });
 
-
-
           });
         }
         // Task did not respond
       } else {
-        logging.debug(`Task ${taskCounter.name} did not respond`);
+        logging.warn(`Task ${taskCounter.name} did not respond`);
         taskCounter.failureCount += 1;
         if (taskCounter.failureCount > TOLERANCE && taskCounter.up) {
           taskCounter.up = false;
@@ -55,10 +55,10 @@ export const processTask = (taskCounter: TaskCounter, callback: () => any) => {
             logging.warn(`Triggering alert for task ${taskCounter.name} subtask ${taskCounter.subname}`);
 
             // Resend alert until it's received
-            alert.execute(alertCounter.params, (res: boolean) => {
+            alert.execute(_.merge(taskCounter, alertCounter.params), (res: boolean) => {
               if (!res) {
                 const alertResendInterval = setInterval(() => {
-                  alert.execute(alertCounter.params, (res: boolean) => {
+                  alert.execute(_.merge(taskCounter, alertCounter.params), (res: boolean) => {
                     if (res) {
                       logging.warn(`Alert for ${taskCounter.name} subtask ${taskCounter.subname} correctly triggered`);
                       clearInterval(alertResendInterval);
