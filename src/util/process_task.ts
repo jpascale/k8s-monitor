@@ -15,7 +15,7 @@ const REPEAT_ALERT_AFTER_TIMES = 100;
 export const processTask = (taskCounter: TaskCounter, callback: () => any) => {
   const now = moment();
   if (now.isSame(taskCounter.next) || now.isAfter(taskCounter.next)) {
-    logging.info(`Executing task ${taskCounter.name} (${taskCounter.subname})`);
+    logging.debug(`Executing task ${taskCounter.name} (${taskCounter.subname})`);
     const task: Task = TASK_MAP[taskCounter.type];
     task.execute(taskCounter.params, (result: boolean) => {
       // Task did respond
