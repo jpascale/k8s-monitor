@@ -23,7 +23,7 @@ const getOptions = (hook: string, text: string) => {
 
 export class SlackAlert implements Alert {
   public execute(params: Params, cb: (result: boolean) => any) {
-    const options = getOptions(params.hook, `Downtime alert: Server ${params.name} (${params.subname}) is DOWN.`);
+    const options = getOptions(params.hook, `Downtime alert: Server \`${params.name}\` (\`${params.subname}\`) is \`DOWN\`.`);
     request(options, (error: any, response: any) => {
       if (!error && response.statusCode < 300) {
         cb(true);
@@ -34,7 +34,7 @@ export class SlackAlert implements Alert {
   };
 
   public restablish(params: Params, cb: (result: boolean) => any) {
-    const options = getOptions(params.hook, `Downtime alert: Server ${params.name} (${params.subname}) is UP again.`);
+    const options = getOptions(params.hook, `Downtime alert: Server \`${params.name}\` (\`${params.subname}\`) is \`UP\` again.`);
     request(options, (error: any, response: any) => {
       if (!error && response.statusCode < 300) {
         cb(true);
