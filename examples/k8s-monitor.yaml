@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: k8s-monitor
+  namespace: production
+spec:
+  containers:
+    - name: k8s-monitor
+      image: docker.io/johnpaskeil/k8s-monitor:latest
+      command: [ "/bin/sh", "-c", "node /home/k8s-monitor/build/index.js /etc/config/k8s-monitor-config.json" ]
+      volumeMounts:
+      - name: k8s-monitor-config
+        mountPath: /etc/config
+  volumes:
+    - name: k8s-monitor-config
+      configMap:
+        name: k8s-monitor-config
+  restartPolicy: Never
