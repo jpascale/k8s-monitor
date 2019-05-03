@@ -8,6 +8,14 @@ spec:
     - name: k8s-monitor
       image: docker.io/johnpaskeil/k8s-monitor:latest
       command: [ "/bin/sh", "-c", "node /home/k8s-monitor/build/index.js /etc/config/k8s-monitor-config.json" ]
+      env:
+        - name: NEW_RELIC_APP_NAME
+          value: 'K8s Monitor'
+        - name: NEW_RELIC_LICENSE_KEY
+        valueFrom:
+          secretKeyRef:
+            name: newrelic-token
+            key: key
       volumeMounts:
       - name: k8s-monitor-config
         mountPath: /etc/config
