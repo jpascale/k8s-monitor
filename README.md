@@ -13,6 +13,7 @@ docker run -it --name k8s-monitor --network host -v $(pwd):/home/k8s-monitor k8s
 docker stop -s INT k8s-monitor
 
 # Configure new relic monitoring
+kubectl create secret generic newrelic-token --from-literal key=XXXXX
 
 # Contact
 jpascale@itba.edu.ar
