@@ -27,6 +27,7 @@
     "express": "^4.16.4",
     "lodash": "^4.17.11",
     "moment": "^2.24.0",
+    "newrelic": "^5.7.0",
     "request": "^2.88.0",
     "winston": "^3.2.1"
   },

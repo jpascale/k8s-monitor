@@ -6,6 +6,12 @@ import { Config, TaskCounter } from './types';
 import { generateTaskCounters, updateTaskCounterNext, processTask } from './util';
 const path = require('path');
 
+// Newrelic support
+if (process.env['NEW_RELIC_LICENSE_KEY']) {
+  logging.info(`NewRelic key found, starting new relic agent for app: ${process.env['NEW_RELIC_APP_NAME'] || '(NewRelic\'s default app name)'}`)
+  require('newrelic');
+}
+
 logging.info('Starting k8s monitor');
 
 if (process.argv.length <= 2) {
