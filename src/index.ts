@@ -1,9 +1,7 @@
-// Newrelic support
+// Newrelic support, require should be in the first line
 if (process.env['NEW_RELIC_LICENSE_KEY']) {
-  logging.info(`NewRelic key found, starting new relic agent for app: ${process.env['NEW_RELIC_APP_NAME'] || '(NewRelic\'s default app name)'}`)
   require('newrelic');
 }
-
 import * as async from 'async';
 import logging from './logging';
 import * as config from './config';
@@ -12,8 +10,11 @@ import { Config, TaskCounter } from './types';
 import { generateTaskCounters, updateTaskCounterNext, processTask } from './util';
 const path = require('path');
 
-
 logging.info('Starting k8s monitor');
+
+if (process.env['NEW_RELIC_LICENSE_KEY']) {
+  logging.info(`NewRelic key found, starting new relic agent for app: ${process.env['NEW_RELIC_APP_NAME'] || '(NewRelic\'s default app name)'}`)
+}
 
 if (process.argv.length <= 2) {
   logging.error('No config file provided');
