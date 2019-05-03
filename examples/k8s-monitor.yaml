@@ -9,6 +9,10 @@ spec:
       image: docker.io/johnpaskeil/k8s-monitor:latest
       command: [ "/bin/sh", "-c", "node /home/k8s-monitor/build/index.js /etc/config/k8s-monitor-config.json" ]
       env:
+        - name: NEW_RELIC_ENABLED
+          value: 'true'
+        - name: NEW_RELIC_NO_CONFIG_FILE
+          value: 'true'
         - name: NEW_RELIC_APP_NAME
           value: 'K8s Monitor'
         - name: NEW_RELIC_LICENSE_KEY
