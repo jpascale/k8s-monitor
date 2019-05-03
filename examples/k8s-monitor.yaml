@@ -12,10 +12,10 @@ spec:
         - name: NEW_RELIC_APP_NAME
           value: 'K8s Monitor'
         - name: NEW_RELIC_LICENSE_KEY
-        valueFrom:
-          secretKeyRef:
-            name: newrelic-token
-            key: key
+          valueFrom:
+            secretKeyRef:
+              name: newrelic-token
+              key: key
       volumeMounts:
       - name: k8s-monitor-config
         mountPath: /etc/config
