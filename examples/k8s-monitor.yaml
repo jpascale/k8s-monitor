@@ -11,6 +11,14 @@ spec:
       volumeMounts:
       - name: k8s-monitor-config
         mountPath: /etc/config
+      resources:
+        limits:
+          cpu: 100m
+          memory: 128Mi
+        requests:
+          cpu: 50m
+          memory: 64Mi
+
   volumes:
     - name: k8s-monitor-config
       configMap:
