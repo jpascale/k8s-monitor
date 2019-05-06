@@ -1,38 +1,64 @@
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: k8s-monitor
+  name: k8s-monitor
+  namespace: production
+spec:
+  template:
+    metadata:
+      labels:
+        app: k8s-monitor
+      name: k8s-monitor
+    spec:
+
+      containers:
+        - name: k8s-monitor
+          imagePullPolicy: Always
+          image: docker.io/johnpaskeil/k8s-monitor:latest
+          command: [ "/bin/sh", "-c", "node /home/k8s-monitor/build/index.js /etc/config/k8s-monitor-config.json" ]
+          env:
+            - name: NEW_RELIC_ENABLED
+              value: 'true'
+            - name: NEW_RELIC_NO_CONFIG_FILE
+              value: 'true'
+            - name: NEW_RELIC_APP_NAME
+              value: 'K8s Monitor Serving'
+            - name: NEW_RELIC_LICENSE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: newrelic-token
+                  key: key
+          ports:
+          - containerPort: 3000
+          volumeMounts:
+          - name: k8s-monitor-config
+            mountPath: /etc/config
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 50m
+              memory: 64Mi
+
+      volumes:
+        - name: k8s-monitor-config
+          configMap:
+            name: k8s-monitor-config
+      restartPolicy: Always
+---
 apiVersion: v1
-kind: Pod
+kind: Service
 metadata:
   name: k8s-monitor
   namespace: production
 spec:
-  containers:
-    - name: k8s-monitor
-      image: docker.io/johnpaskeil/k8s-monitor:latest
-      command: [ "/bin/sh", "-c", "node /home/k8s-monitor/build/index.js /etc/config/k8s-monitor-config.json" ]
-      env:
-        - name: NEW_RELIC_ENABLED
-          value: 'true'
-        - name: NEW_RELIC_NO_CONFIG_FILE
-          value: 'true'
-        - name: NEW_RELIC_APP_NAME
-          value: 'K8s Monitor'
-        - name: NEW_RELIC_LICENSE_KEY
-          valueFrom:
-            secretKeyRef:
-              name: newrelic-token
-              key: key
-      volumeMounts:
-      - name: k8s-monitor-config
-        mountPath: /etc/config
-      resources:
-        limits:
-          cpu: 100m
-          memory: 128Mi
-        requests:
-          cpu: 50m
-          memory: 64Mi
-
-  volumes:
-    - name: k8s-monitor-config
-      configMap:
-        name: k8s-monitor-config
-  restartPolicy: Never
+  ports:
+  - port: 80
+    targetPort: 3000
+    protocol: TCP
+  selector:
+    app: k8s-monitor
